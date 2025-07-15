@@ -1,8 +1,7 @@
 services:
-  # 1. Веб-сервис для Directus
   - type: web
     name: directus-backend
-    env: node
+    runtime: node
     plan: free
     region: frankfurt
     buildCommand: "npm install"
@@ -10,15 +9,13 @@ services:
     healthCheckPath: /server/health
     envVars:
       - key: PORT
-        value: 8055
+        value: "8055"
       - key: PUBLIC_URL
-        fromService:
-          type: web
-          name: directus-backend
-          property: url
+        value: "" # временно, потом отредактируешь вручную
       - key: DB_CLIENT
         value: pg
-      - fromDatabase:
+      - key: DATABASE_URL
+        fromDatabase:
           name: directus-database
           property: connectionString
       - key: CACHE_ENABLED
@@ -31,24 +28,25 @@ services:
           name: directus-cache
           property: connectionString
       - key: ADMIN_EMAIL
-        sync: false
+        value: admin@example.com
       - key: ADMIN_PASSWORD
-        sync: false
+        value: directus
       - key: KEY
         generateValue: true
       - key: SECRET
         generateValue: true
 
-  # 2. База данных PostgreSQL как сервис
-  - type: pserv
-    name: directus-database
-    plan: free
-    postgres:
-      databaseName: directus
-      user: directus
-
-  # 3. Кэш Redis как сервис
   - type: redis
     name: directus-cache
     plan: free
     ipAllowList: [] # Разрешаем доступ отовсюду
+
+databases:
+  - name: directus-database
+    plan: free
+    postgresMajorVersion: "15"
+    databaseName: directus
+    user: directus
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: public access
