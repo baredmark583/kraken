@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: directus
+    env: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: KEY
+        generateValue: true
+      - key: SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: mihailmamedov666@gmail.com
+      - key: ADMIN_PASSWORD
+        value: VVqaz123!
+      - key: DB_CLIENT
+        value: postgres
+      - key: DB_HOST
+        value: dpg-d1r35vre5dus73e7b47g-a
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: kraken_db_6fkk
+      - key: DB_USER
+        value: kraken_db_6fkk_user
+      - key: DB_PASSWORD
+        value: Rq1hCOII1v0kHd1Q5BmxFfTBs2BH8QDb
