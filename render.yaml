@@ -11,13 +11,11 @@ services:
       - key: PORT
         value: "8055"
       - key: PUBLIC_URL
-        value: "" # временно, потом отредактируешь вручную
+        value: "" # можно будет поменять вручную после деплоя
       - key: DB_CLIENT
         value: pg
       - key: DATABASE_URL
-        fromDatabase:
-          name: directus-database
-          property: connectionString
+        value: postgresql://kraken_db_6fkk_user:Rq1hCOII1v0kHd1Q5BmxFfTBs2BH8QDb@dpg-d1r35vre5dus73e7b47g-a/kraken_db_6fkk
       - key: CACHE_ENABLED
         value: "true"
       - key: CACHE_STORE
@@ -28,9 +26,9 @@ services:
           name: directus-cache
           property: connectionString
       - key: ADMIN_EMAIL
-        value: admin@example.com
+        value: mihailmamedov666@gmail.com
       - key: ADMIN_PASSWORD
-        value: directus
+        value: VVqaz123!
       - key: KEY
         generateValue: true
       - key: SECRET
@@ -39,14 +37,4 @@ services:
   - type: redis
     name: directus-cache
     plan: free
-    ipAllowList: [] # Разрешаем доступ отовсюду
-
-databases:
-  - name: directus-database
-    plan: free
-    postgresMajorVersion: "15"
-    databaseName: directus
-    user: directus
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: public access
+    ipAllowList: []
