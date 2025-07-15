@@ -1,24 +1,25 @@
 services:
   # 1. Веб-сервис для Directus
   - type: web
-    name: kraken-backend  # Можете назвать как угодно
-    env: docker
+    name: directus-backend
+    env: node
     plan: free
     region: frankfurt
+    buildCommand: "npm install"
+    startCommand: "npx directus start"
     healthCheckPath: /server/health
-    dockerCommand: "node /directus/cli.js start"
     envVars:
       - key: PORT
         value: 8055
       - key: PUBLIC_URL
         fromService:
           type: web
-          name: kraken-backend # Важно: имя должно совпадать с name этого сервиса
+          name: directus-backend
           property: url
       - key: DB_CLIENT
         value: pg
       - fromDatabase:
-          name: kraken-db
+          name: directus-database
           property: connectionString
       - key: CACHE_ENABLED
         value: "true"
@@ -27,24 +28,27 @@ services:
       - key: CACHE_REDIS
         fromService:
           type: redis
-          name: kraken-cache
+          name: directus-cache
           property: connectionString
       - key: ADMIN_EMAIL
-        sync: false # Чтобы не хранить на GitHub
+        sync: false
       - key: ADMIN_PASSWORD
-        sync: false # Чтобы не хранить на GitHub
+        sync: false
       - key: KEY
         generateValue: true
       - key: SECRET
         generateValue: true
 
-# 2. База данных PostgreSQL
-databases:
-  - name: kraken-db
+  # 2. База данных PostgreSQL как сервис
+  - type: pserv
+    name: directus-database
     plan: free
+    postgres:
+      databaseName: directus
+      user: directus
 
-# 3. Кэш Redis
-redis:
-  - name: kraken-cache
+  # 3. Кэш Redis как сервис
+  - type: redis
+    name: directus-cache
     plan: free
     ipAllowList: [] # Разрешаем доступ отовсюду
