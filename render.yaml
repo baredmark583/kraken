@@ -41,12 +41,13 @@ services:
     name: directus-cache
     plan: free
     region: frankfurt
+    ipAllowList: []
 
 databases:
   - name: directus-database
     plan: free
     region: frankfurt
     postgresMajorVersion: "15"
+    ipAllowList: []
 
 
-    
