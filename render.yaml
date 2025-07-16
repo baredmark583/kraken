@@ -4,18 +4,20 @@ services:
     runtime: node
     plan: free
     region: frankfurt
-    buildCommand: "npm install"
+    buildCommand: "npm install && npx directus bootstrap"
     startCommand: "npx directus start"
     healthCheckPath: /server/health
     envVars:
       - key: PORT
         value: "8055"
       - key: PUBLIC_URL
-        value: "" # можно будет поменять вручную после деплоя
+        value: "" # после создания сервиса зайдёшь и подставишь сюда адрес вручную
       - key: DB_CLIENT
         value: pg
       - key: DATABASE_URL
-        value: postgresql://kraken_db_6fkk_user:Rq1hCOII1v0kHd1Q5BmxFfTBs2BH8QDb@dpg-d1r35vre5dus73e7b47g-a/kraken_db_6fkk
+        fromDatabase:
+          name: directus-database
+          property: connectionString
       - key: CACHE_ENABLED
         value: "true"
       - key: CACHE_STORE
@@ -38,3 +40,13 @@ services:
     name: directus-cache
     plan: free
     ipAllowList: []
+
+databases:
+  - name: directus-database
+    plan: free
+    postgresMajorVersion: "15"
+    databaseName: directus
+    user: directus
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: public access
