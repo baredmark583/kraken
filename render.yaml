@@ -2,7 +2,7 @@ services:
   - type: web
     name: directus-backend
     runtime: node
-    plan: free
+    plan: free # Остаемся на бесплатном тарифе
     region: frankfurt
     buildCommand: "npm install && npx directus bootstrap"
     startCommand: "npx directus start"
@@ -35,17 +35,7 @@ services:
         generateValue: true
       - key: SECRET
         generateValue: true
-      - key: STORAGE_LOCATIONS
-        value: local
-      - key: STORAGE_LOCAL_DRIVER
-        value: local
-      - key: STORAGE_LOCAL_ROOT
-        value: /data/uploads
-
-    disks:
-      - name: directus-uploads
-        mountPath: /data
-        sizeGB: 1
+      # Переменные для хранилища и сам блок disks удалены
 
   - type: redis
     name: directus-cache
@@ -57,5 +47,6 @@ databases:
     plan: free
     region: frankfurt
     postgresMajorVersion: "15"
+
 
     
