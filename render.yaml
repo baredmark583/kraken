@@ -3,15 +3,18 @@ services:
     name: directus-backend
     runtime: node
     plan: free
-    region: frankfurt
+    region: frankfurt # Убедись, что регион совпадает с регионом твоей БД и Redis
     buildCommand: "npm install && npx directus bootstrap"
     startCommand: "npx directus start"
     healthCheckPath: /server/health
+    healthCheckInitialDelaySeconds: 90 # Даем больше времени на первый запуск
     envVars:
       - key: PORT
-        value: "8055"
+        value: 8055
       - key: PUBLIC_URL
-        value: "" # после создания сервиса зайдёшь и подставишь сюда адрес вручную
+        sync: false # Установишь вручную в UI после деплоя
+      - key: DB_CLIENT
+        value: pg
       - key: DATABASE_URL
         fromDatabase:
           name: directus-database
@@ -26,25 +29,38 @@ services:
           name: directus-cache
           property: connectionString
       - key: ADMIN_EMAIL
-        value: mihailmamedov666@gmail.com
+        value: mihailmamedov666@gmail.com # Можешь поменять на свой
       - key: ADMIN_PASSWORD
-        value: VVqaz123!
+        sync: false # Установишь вручную в UI после деплоя
       - key: KEY
         generateValue: true
       - key: SECRET
         generateValue: true
+      # --- Переменные для постоянного хранилища файлов ---
+      - key: STORAGE_LOCATIONS
+        value: local
+      - key: STORAGE_LOCAL_DRIVER
+        value: local
+      - key: STORAGE_LOCAL_ROOT
+        value: /data/uploads # Папка на постоянном диске
 
+  # --- Подключаем постоянный диск к веб-сервису ---
+    disks:
+      - name: directus-uploads
+        mountPath: /data
+        sizeGB: 1
+
+  # --- Сервис Redis для кэширования ---
   - type: redis
     name: directus-cache
     plan: free
-    ipAllowList: []
+    region: frankfurt
 
+# --- База данных PostgreSQL ---
 databases:
   - name: directus-database
     plan: free
+    region: frankfurt
     postgresMajorVersion: "15"
-    databaseName: directus
-    user: directus
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: public access
+
+
