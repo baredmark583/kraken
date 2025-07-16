@@ -12,8 +12,6 @@ services:
         value: "8055"
       - key: PUBLIC_URL
         value: "" # после создания сервиса зайдёшь и подставишь сюда адрес вручную
-      - key: DB_CLIENT
-        value: pg
       - key: DATABASE_URL
         fromDatabase:
           name: directus-database
