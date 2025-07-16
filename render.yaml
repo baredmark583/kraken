@@ -61,5 +61,3 @@ databases:
     postgresMajorVersion: "15"
 
 
-git add .
-
