@@ -3,16 +3,17 @@ services:
     name: directus-backend
     runtime: node
     plan: free
-    region: frankfurt # Убедись, что регион совпадает с регионом твоей БД и Redis
+    region: frankfurt
     buildCommand: "npm install && npx directus bootstrap"
     startCommand: "npx directus start"
     healthCheckPath: /server/health
-    healthCheckInitialDelaySeconds: 90 # Даем больше времени на первый запуск
+    # --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+    healthCheckInitialDelaySeconds: 90
     envVars:
       - key: PORT
         value: 8055
       - key: PUBLIC_URL
-        sync: false # Установишь вручную в UI после деплоя
+        sync: false
       - key: DB_CLIENT
         value: pg
       - key: DATABASE_URL
@@ -29,38 +30,36 @@ services:
           name: directus-cache
           property: connectionString
       - key: ADMIN_EMAIL
-        value: mihailmamedov666@gmail.com # Можешь поменять на свой
+        value: mihailmamedov666@gmail.com
       - key: ADMIN_PASSWORD
-        sync: false # Установишь вручную в UI после деплоя
+        sync: false
       - key: KEY
         generateValue: true
       - key: SECRET
         generateValue: true
-      # --- Переменные для постоянного хранилища файлов ---
       - key: STORAGE_LOCATIONS
         value: local
       - key: STORAGE_LOCAL_DRIVER
         value: local
       - key: STORAGE_LOCAL_ROOT
-        value: /data/uploads # Папка на постоянном диске
+        value: /data/uploads
 
-  # --- Подключаем постоянный диск к веб-сервису ---
     disks:
       - name: directus-uploads
         mountPath: /data
         sizeGB: 1
 
-  # --- Сервис Redis для кэширования ---
   - type: redis
     name: directus-cache
     plan: free
     region: frankfurt
 
-# --- База данных PostgreSQL ---
 databases:
   - name: directus-database
     plan: free
     region: frankfurt
     postgresMajorVersion: "15"
 
+
+git add .
 
