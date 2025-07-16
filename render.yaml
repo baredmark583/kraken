@@ -2,7 +2,7 @@ services:
   - type: web
     name: directus-backend
     runtime: node
-    plan: free # Остаемся на бесплатном тарифе
+    plan: free
     region: frankfurt
     buildCommand: "npm install && npx directus bootstrap"
     startCommand: "npx directus start"
@@ -12,12 +12,39 @@ services:
         value: 8055
       - key: PUBLIC_URL
         sync: false
+      - key: ADMIN_EMAIL
+        value: mihailmamedov666@gmail.com
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: KEY
+        generateValue: true
+      - key: SECRET
+        generateValue: true
+
       - key: DB_CLIENT
         value: pg
-      - key: DATABASE_URL
+
+      - key: DB_HOST
         fromDatabase:
           name: directus-database
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: directus-database
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: directus-database
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: directus-database
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: directus-database
+          property: password
+
       - key: CACHE_ENABLED
         value: "true"
       - key: CACHE_STORE
@@ -27,15 +54,6 @@ services:
           type: redis
           name: directus-cache
           property: connectionString
-      - key: ADMIN_EMAIL
-        value: mihailmamedov666@gmail.com
-      - key: ADMIN_PASSWORD
-        sync: false
-      - key: KEY
-        generateValue: true
-      - key: SECRET
-        generateValue: true
-      # Переменные для хранилища и сам блок disks удалены
 
   - type: redis
     name: directus-cache
@@ -49,5 +67,4 @@ databases:
     region: frankfurt
     postgresMajorVersion: "15"
     ipAllowList: []
-
 
