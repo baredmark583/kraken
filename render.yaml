@@ -7,8 +7,6 @@ services:
     buildCommand: "npm install && npx directus bootstrap"
     startCommand: "npx directus start"
     healthCheckPath: /server/health
-    # --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
-    healthCheckInitialDelaySeconds: 90
     envVars:
       - key: PORT
         value: 8055
@@ -60,4 +58,4 @@ databases:
     region: frankfurt
     postgresMajorVersion: "15"
 
-
+    
