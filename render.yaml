@@ -49,7 +49,7 @@ services:
         value: "true"
       - key: CACHE_STORE
         value: redis
-      - key: CACHE_REDIS
+      - key: REDIS
         fromService:
           type: redis
           name: directus-cache
@@ -68,3 +68,4 @@ databases:
     postgresMajorVersion: "15"
     ipAllowList: []
 
+    
